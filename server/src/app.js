@@ -27,8 +27,7 @@ app.use((err, req, res, next) => {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({ message: 'Server Error' });
 });
 
 const port = process.env.PORT || config.port || 9000;
