@@ -1,3 +1,4 @@
+import EchoService from '../services/EchoService';
 import winston from 'winston';
 
 const EchoController = {};
@@ -10,8 +11,9 @@ EchoController.echo = (req, res, next) => {
         return res.status(400).json({ message: 'No Input was provided' });
     }
 
-    winston.log('info', `echoing given value: ${input}`);
-    return res.json({ output: input });
+    return EchoService.Echo(input)
+        .then(input => res.json({ output: input }))
+        .catch(next);
 };
 
 export default EchoController;

@@ -1,5 +1,5 @@
+import ControlService from '../services/ControlService';
 import winston from 'winston';
-import LogicUtils from '../utils/LogicUtils';
 
 const ControlController = {};
 
@@ -11,10 +11,9 @@ ControlController.TakePath = (req, res, next) => {
         return res.status(400).json({ message: 'No Input was provided' });
     }
 
-    const test  = LogicUtils.SimplifyLogicExpression(input);
-    winston.log('info', `Test resolved to ${test}`);
-
-    return res.json({ output: test });
+    return ControlService.TakePath(input)
+        .then(test => res.json({ output: test }))
+        .catch(next);
 };
 
 export default ControlController;
