@@ -30,7 +30,7 @@ class Echo extends Component {
 
   onChangeInput(value) {
     const variables = this.state.variables;
-    this.setState({ input: variables[value], varSelected: value });
+    this.setState({ varSelected: value });
   }
 
   render() {
@@ -44,11 +44,7 @@ class Echo extends Component {
                   value={this.state.inputType}
                   onChange={(val) => this.onChange(val.value)} /></li>
           {this.state.inputType === 'Variable' &&
-          (<li><Select
-             placeHolder='None'
-             options={Object.keys(this.state.variables)}
-             value={this.state.varSelected}
-             onChange={(val) => this.onChangeInput(val.value)} /></li>)}
+          (<li><TextInput /></li>)}
           </ul>
       </Box>
     )
@@ -82,7 +78,8 @@ class New extends Component {
       <Box>
         <span>New</span><CloseIcon onClick={this.destroy}/>
         Name:
-        <TextInput>
+        <TextInput
+          onDOMChange={(event) => console.log(event.target.value)}>
         </TextInput>
         Input:
         <ul className="inputList">
@@ -91,11 +88,7 @@ class New extends Component {
                       value={this.state.inputType}
                       onChange={(val) => this.onChange(val.value)} /></li>
           {this.state.inputType === 'Variable' &&
-          (<li><Select
-            placeHolder='None'
-            options={Object.keys(this.state.variables)}
-            value={this.state.varSelected}
-            onChange={(val) => this.onChangeInput(val.value)} /></li>)}
+          (<li><TextInput /></li>)}
         </ul>
       </Box>
     )
@@ -113,12 +106,21 @@ class App extends Component {
     };
     this.keys = 0;
     this.destroy = this.destroy.bind(this);
+    this.onVarNameChange = this.onVarNameChange.bind(this);
   }
 
   destroy(key) {
     let commands = this.state.commands;
     commands = commands.filter(elem => elem.key != key);
     this.setState({ commands: commands });
+  }
+
+  onVarNameChange(oldName, newName) {
+    const variables = this.state.variables;
+    if (oldName) {
+      delete variables[oldName];
+    }
+
   }
 
   createCommand(index) {
