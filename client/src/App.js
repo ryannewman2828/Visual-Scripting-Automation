@@ -21,16 +21,18 @@ class Echo extends Component {
       varSelected: '',
       variables: props.variables,
       inputType: 'Link'
-    }
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onChangeInput = this.onChangeInput.bind(this);
   }
 
   onChange(value) {
     this.setState({inputType: value});
   }
 
-  onChangeInput(value) {
-    const variables = this.state.variables;
-    this.setState({ varSelected: value });
+  onChangeInput(env) {
+    this.setState({ varSelected: env.target.value });
   }
 
   render() {
@@ -44,42 +46,57 @@ class Echo extends Component {
                   value={this.state.inputType}
                   onChange={(val) => this.onChange(val.value)} /></li>
           {this.state.inputType === 'Variable' &&
-          (<li><TextInput /></li>)}
+          (<li><TextInput
+                 onDOMChange={this.onChangeInput}/></li>)}
           </ul>
       </Box>
     )
   }
 }
 
-class New extends Component {
+class Store extends Component {
   constructor(props) {
     super();
 
     this.destroy = () => props.destroy(props.id);
 
     this.state = {
+      varName: '',
+      value: null,
       varSelected: '',
       variables: props.variables,
       inputType: 'Link'
-    }
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onChangeInput = this.onChangeInput.bind(this);
+    this.onChangeVarName = this.onChangeVarName.bind(this);
+    this.onChangeValue = this.onChangeValue.bind(this);
   }
 
   onChange(value) {
     this.setState({inputType: value});
   }
 
-  onChangeInput(value) {
-    const variables = this.state.variables;
-    this.setState({ input: variables[value], varSelected: value });
+  onChangeVarName(env) {
+    this.setState({ varName: env.target.value });
+  }
+
+  onChangeInput(env) {
+    this.setState({ varSelected: env.target.value });
+  }
+
+  onChangeValue(env) {
+    this.setState({ value: env.target.value });
   }
 
   render() {
     return (
       <Box>
-        <span>New</span><CloseIcon onClick={this.destroy}/>
+        <span>Store</span><CloseIcon onClick={this.destroy}/>
         Name:
         <TextInput
-          onDOMChange={(event) => console.log(event.target.value)}>
+          onDOMChange={this.onChangeVarName}>
         </TextInput>
         Input:
         <ul className="inputList">
@@ -88,7 +105,64 @@ class New extends Component {
                       value={this.state.inputType}
                       onChange={(val) => this.onChange(val.value)} /></li>
           {this.state.inputType === 'Variable' &&
-          (<li><TextInput /></li>)}
+          (<li><TextInput
+            onDOMChange={this.onChangeInput}/></li>)}
+          {this.state.inputType === 'Value' &&
+          (<li><TextInput
+            onDOMChange={this.onChangeValue}/></li>)}
+        </ul>
+      </Box>
+    )
+  }
+}
+
+class If extends Component {
+  constructor(props) {
+    super();
+
+    this.destroy = () => props.destroy(props.id);
+
+    this.state = {
+      varName: '',
+      value: null,
+      varSelected: '',
+      variables: props.variables,
+      inputType: 'Link'
+    };
+
+    this.onChange = this.onChange.bind(this);
+    this.onChangeInput = this.onChangeInput.bind(this);
+    this.onChangeValue = this.onChangeValue.bind(this);
+  }
+
+  onChange(value) {
+    this.setState({inputType: value});
+  }
+
+  onChangeInput(env) {
+    this.setState({ varSelected: env.target.value });
+  }
+
+  onChangeValue(env) {
+    this.setState({ value: env.target.value });
+  }
+
+  render() {
+    return (
+      <Box>
+        <span>If</span><CloseIcon onClick={this.destroy}/>
+        Input:
+        <ul className="inputList">
+          <li><Select placeHolder='Link'
+                      options={['Link', 'Variable', 'Value']}
+                      value={this.state.inputType}
+                      onChange={(val) => this.onChange(val.value)} /></li>
+          {this.state.inputType === 'Variable' &&
+          (<li><TextInput
+            onDOMChange={this.onChangeInput}/></li>)}
+          {this.state.inputType === 'Value' &&
+          (<li><TextInput
+            onDOMChange={this.onChangeValue}/></li>)}
         </ul>
       </Box>
     )
@@ -104,23 +178,15 @@ class App extends Component {
       commands: [],
       variables: { count: 0 }
     };
+
     this.keys = 0;
     this.destroy = this.destroy.bind(this);
-    this.onVarNameChange = this.onVarNameChange.bind(this);
   }
 
   destroy(key) {
     let commands = this.state.commands;
     commands = commands.filter(elem => elem.key != key);
     this.setState({ commands: commands });
-  }
-
-  onVarNameChange(oldName, newName) {
-    const variables = this.state.variables;
-    if (oldName) {
-      delete variables[oldName];
-    }
-
   }
 
   createCommand(index) {
@@ -131,7 +197,11 @@ class App extends Component {
         this.setState({ commands: commands });
         break;
       case 1:
-        commands.push(<ListItem key={this.keys}><New id={this.keys} variables={this.state.variables} destroy={this.destroy}></New></ListItem>);
+        commands.push(<ListItem key={this.keys}><Store id={this.keys} variables={this.state.variables} destroy={this.destroy}></Store></ListItem>);
+        this.setState({ commands: commands });
+        break;
+      case 2:
+        commands.push(<ListItem key={this.keys}><If id={this.keys} variables={this.state.variables} destroy={this.destroy}></If></ListItem>);
         this.setState({ commands: commands });
         break;
     }
@@ -161,18 +231,19 @@ class App extends Component {
                 </ListItem>
                 <ListItem justify='between'>
                   <span>
-                    New
-                  </span>
-                </ListItem>
-                <ListItem justify='between'>
-                  <span>
                     Store
                   </span>
                 </ListItem>
                 <ListItem justify='between'
                           separator='horizontal'>
                   <span>
-                    If/Else
+                    If
+                  </span>
+                </ListItem>
+                <ListItem justify='between'
+                          separator='horizontal'>
+                  <span>
+                    Else
                   </span>
                 </ListItem>
                 <ListItem justify='between'>
@@ -183,6 +254,12 @@ class App extends Component {
                 <ListItem justify='between'>
                   <span>
                     Range Loop
+                  </span>
+                </ListItem>
+                <ListItem justify='between'
+                          separator='horizontal'>
+                  <span>
+                    End
                   </span>
                 </ListItem>
                 <ListItem justify='between'
