@@ -1,28 +1,53 @@
-.App {
-  text-align: center;
+.main .split {
+  height: 55vh;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.main .heading {
+  height: 10vh;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.grommetux-split__column {
+  height: 55vh !important;
+  width: 30%;
 }
 
-.App-title {
-  font-size: 1.5em;
+.grommetux-list--selectable {
+  height: inherit;
 }
 
-.App-intro {
-  font-size: large;
+.main ul{
+  overflow: auto;
+  overflow-x: hidden;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.main .selectorPanel {
+  border-color: black;
+  border-style: solid;
+  border-bottom: none;
+  border-radius: 1px;
+  height: 54vh;
+}
+
+.main .commands {
+  border-color: black;
+  border-right: solid;
+  border-top: solid;
+  border-radius: 1px;
+  height: 54vh;
+}
+
+.main .console {
+  border-color: black;
+  border-top: solid;
+  border-left: solid;
+  border-right: solid;
+  border-radius: 1px;
+  height: 34vh;
+}
+
+.main .console ul {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  max-height: 100%;
 }
