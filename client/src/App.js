@@ -1,49 +1,139 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import CloseIcon from 'grommet/components/icons/base/Close';
 
 import { default as GrommetApp } from 'grommet/components/App'
 import Split from 'grommet/components/Split';
 import Box from 'grommet/components/Box';
 import List from 'grommet/components/List';
 import ListItem from 'grommet/components/ListItem';
+import Select from 'grommet/components/Select';
+import TextInput from 'grommet/components/TextInput';
 
 class Echo extends Component {
-  constructor() {
+  constructor(props) {
     super();
+
+    this.destroy = () => props.destroy(props.id);
+
     this.state = {
-      input: ''
+      varSelected: '',
+      variables: props.variables,
+      inputType: 'Link'
     }
+  }
+
+  onChange(value) {
+    this.setState({inputType: value});
+  }
+
+  onChangeInput(value) {
+    const variables = this.state.variables;
+    this.setState({ input: variables[value], varSelected: value });
   }
 
   render() {
     return (
       <Box>
-        Echo
+        <span>Echo</span><CloseIcon onClick={this.destroy}/>
+        Input:
+        <ul className="inputList">
+          <li><Select placeHolder='Link'
+                  options={['Link', 'Variable']}
+                  value={this.state.inputType}
+                  onChange={(val) => this.onChange(val.value)} /></li>
+          {this.state.inputType === 'Variable' &&
+          (<li><Select
+             placeHolder='None'
+             options={Object.keys(this.state.variables)}
+             value={this.state.varSelected}
+             onChange={(val) => this.onChangeInput(val.value)} /></li>)}
+          </ul>
       </Box>
     )
   }
+}
 
+class New extends Component {
+  constructor(props) {
+    super();
+
+    this.destroy = () => props.destroy(props.id);
+
+    this.state = {
+      varSelected: '',
+      variables: props.variables,
+      inputType: 'Link'
+    }
+  }
+
+  onChange(value) {
+    this.setState({inputType: value});
+  }
+
+  onChangeInput(value) {
+    const variables = this.state.variables;
+    this.setState({ input: variables[value], varSelected: value });
+  }
+
+  render() {
+    return (
+      <Box>
+        <span>New</span><CloseIcon onClick={this.destroy}/>
+        Name:
+        <TextInput>
+        </TextInput>
+        Input:
+        <ul className="inputList">
+          <li><Select placeHolder='Link'
+                      options={['Link', 'Variable', 'Value']}
+                      value={this.state.inputType}
+                      onChange={(val) => this.onChange(val.value)} /></li>
+          {this.state.inputType === 'Variable' &&
+          (<li><Select
+            placeHolder='None'
+            options={Object.keys(this.state.variables)}
+            value={this.state.varSelected}
+            onChange={(val) => this.onChangeInput(val.value)} /></li>)}
+        </ul>
+      </Box>
+    )
+  }
 }
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      link: undefined,
       consoleLogs: ['Initializing Console Output'],
       commands: [],
-      variables: {}
-    }
+      variables: { count: 0 }
+    };
+    this.keys = 0;
+    this.destroy = this.destroy.bind(this);
+  }
+
+  destroy(key) {
+    let commands = this.state.commands;
+    commands = commands.filter(elem => elem.key != key);
+    this.setState({ commands: commands });
   }
 
   createCommand(index) {
     const commands = this.state.commands;
-    console.log(commands);
     switch (index) {
       case 0:
-        commands.push(<ListItem><Echo></Echo></ListItem>);
+        commands.push(<ListItem key={this.keys}><Echo id={this.keys} variables={this.state.variables} destroy={this.destroy}></Echo></ListItem>);
         this.setState({ commands: commands });
+        break;
+      case 1:
+        commands.push(<ListItem key={this.keys}><New id={this.keys} variables={this.state.variables} destroy={this.destroy}></New></ListItem>);
+        this.setState({ commands: commands });
+        break;
     }
+    this.keys++;
   }
 
   render() {
