@@ -1,0 +1,69 @@
+[
+  {
+    "commandName": "store",
+    "context":
+    {
+      "varName": "temp",
+      "value": "10",
+      "varSelected": "",
+      "inputType": "Value"
+    }
+  },
+  {
+    "commandName": "echo",
+    "context":
+    {
+      "varSelected": "",
+      "inputType": "Link"
+    }
+  },
+  {
+    "commandName": "if",
+    "context":
+    {
+      "comparator": "==",
+      "inputType1": "Link",
+      "inputType2": "Variable",
+      "value1": null,
+      "value2": null,
+      "varSelected1": "",
+      "varSelected2": "temp"
+    }
+  },
+  {
+    "commandName": "store",
+    "context":
+    {
+      "varName": "result",
+      "value": "true",
+      "varSelected": "",
+      "inputType": "Value"
+    }
+  },
+  {
+    "commandName": "else",
+    "context": null
+  },
+  {
+    "commandName": "store",
+    "context":
+    {
+      "varName": "result",
+      "value": "false",
+      "varSelected": "",
+      "inputType": "Value"
+    }
+  },
+  {
+    "commandName": "end",
+    "context": null
+  },
+  {
+    "commandName": "echo",
+    "context":
+    {
+      "varSelected": "result",
+      "inputType": "Variable"
+    }
+  }
+]

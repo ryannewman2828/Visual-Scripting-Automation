@@ -6,6 +6,7 @@ const router = express.Router();
 import EchoController from './controllers/EchoController';
 import ControlController from './controllers/ControlController';
 import StorageController from './controllers/StorageController';
+import ScriptController from './controllers/ScriptController';
 
 // Import API Tile Controllers
 import GithubController from './controllers/GithubController';
@@ -24,5 +25,8 @@ router.post('/v1/eval', StorageController.Eval);
 
 // Github Tile Routes
 router.post('/v1/github/users', GithubController.GetRepos);
+
+// Script Routes
+router.post('/v1/script/execute', ScriptController.Execute);
 
 module.exports = router;

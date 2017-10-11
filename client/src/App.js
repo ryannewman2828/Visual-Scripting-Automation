@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import fetch from 'node-fetch';
 
 import CloseIcon from 'grommet/components/icons/base/Close';
 
@@ -507,9 +508,25 @@ class App extends Component {
   }
 
   printFeed() {
-    Object.keys(this.child).forEach(key => this.child[key] && this.child[key].addCommand());
+    Object.keys(this.child).forEach(key => this.child[key] && this.child[key].addCommand()); // refactor this to not keep the key
     console.log(this.state.commandFeed);
     this.setState({ commandFeed: [] });
+  }
+
+  executeCode() {
+    Object.keys(this.child).forEach(key => this.child[key] && this.child[key].addCommand()); // refactor this to not keep the key
+    fetch('http://localhost:9000/api/v1/script/execute', {
+      headers: new Headers({
+        Accept: 'application/json',
+        'Content-Type':'application/json'
+      }),
+      mode: 'no-cors',
+      method: 'POST',
+      body: JSON.stringify({ commands: "sd" }),
+    })
+      .then((response) => response.json())
+      .then((a) => console.log(a))
+      .then(() => this.setState({ commandFeed: [] }));
   }
 
   createCommand(index) {
@@ -563,7 +580,7 @@ class App extends Component {
                     href='#' />
               <Button
                     label='Execute'
-                    onClick={() => alert('hello')}
+                    onClick={() => this.executeCode()}
                     href='#' />
             </Box>
           </div>
